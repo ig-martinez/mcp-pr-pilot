@@ -5,6 +5,24 @@ SUMMARIZE_PR_INSTRUCTION = (
     'Format the entire result as a single markdown block.'
 )
 
+
+def build_summarize_pr_instruction(pr_template: str | None = None) -> str:
+    """Build the PR summary instruction, optionally incorporating a template."""
+    if not pr_template:
+        return SUMMARIZE_PR_INSTRUCTION
+    
+    return (
+        'Format the entire result as a single markdown block.\n\n'
+        'Based on the following code changes (git diff), generate a pull request description '
+        'that follows the provided template structure.\n\n'
+        '**IMPORTANT:** Use the template below as your guide. Fill in each section of the template '
+        'based on the code changes. Preserve the template\'s structure, headings, and format. '
+        'If a section in the template is not applicable to the changes, you may omit it or note it as N/A.\n\n'
+        '**PR Template:**\n'
+        f'```markdown\n{pr_template}\n```\n\n'
+        'Generate the PR description following this template structure. '
+    )
+
 REVIEW_CHANGES_INSTRUCTION = (
     'Act as an **expert Senior Software Engineer** performing a **critical code review** of the following changes (git diff). '
     'Your primary focus is on identifying potential issues related to **performance** (e.g., bottlenecks, inefficient algorithms, resource leaks) and **security** (e.g., vulnerabilities like injection, data exposure, insecure dependencies, auth issues). '

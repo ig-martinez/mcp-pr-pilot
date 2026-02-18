@@ -138,6 +138,43 @@ This assumes `uv` is installed directly on Windows and your MCP client also runs
 
 </details>
 
+### Environment Variables
+
+The server supports the following optional environment variables:
+
+-   `PR_TEMPLATE_PATH` - Path to a PR template file. When set, the `summarize_pr` tool will use this template to guide the structure of generated PR descriptions. 
+    
+    **Path Resolution:**
+    - Absolute paths: Used as-is (e.g., `/Users/you/.github/PULL_REQUEST_TEMPLATE.md`)
+    - Home directory (`~`): Expanded to your home directory (e.g., `~/.github/PULL_REQUEST_TEMPLATE.md`)
+    - Relative paths: Resolved relative to the repository folder (e.g., `.github/PULL_REQUEST_TEMPLATE.md`)
+
+    **Example:**
+    ```bash
+    # Relative to repository
+    export PR_TEMPLATE_PATH=".github/PULL_REQUEST_TEMPLATE.md"
+    
+    # Or absolute path
+    export PR_TEMPLATE_PATH="/Users/you/.github/PULL_REQUEST_TEMPLATE.md"
+    
+    # Or home directory
+    export PR_TEMPLATE_PATH="~/.github/PULL_REQUEST_TEMPLATE.md"
+    ```
+
+    You can configure this in your MCP client settings by adding it to the `env` section:
+    ```json
+    "mcpServers": {
+      "pr-pilot": {
+        "command": "uv",
+        "args": ["--directory", "/path/to/mcp-pr-pilot", "run", "mcp-server-pr-pilot"],
+        "env": {
+          "PR_TEMPLATE_PATH": ".github/PULL_REQUEST_TEMPLATE.md"
+        }
+      }
+    }
+    ```
+
+
 ### Handling `.venv` Conflicts (Different Environments)
 
 *   **Problem:** `uv run` creates a `.venv` directory specific to the operating system/environment (e.g., Linux vs. Windows). If you switch between running the server directly on Windows and running it via WSL (or native Linux), the existing `.venv` might be incompatible.

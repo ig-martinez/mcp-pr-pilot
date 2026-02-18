@@ -11,7 +11,7 @@ from .instructions import (
     GENERATE_COMMIT_INSTRUCTION,
     GENERATE_DOCS_INSTRUCTION,
     REVIEW_CHANGES_INSTRUCTION,
-    SUMMARIZE_PR_INSTRUCTION,
+    build_summarize_pr_instruction,
 )
 from .schemas import (
     GitDiffCommitResult,
@@ -20,7 +20,7 @@ from .schemas import (
     GitDiffSummaryParams,
     GitDiffSummaryResult,
 )
-from .services import get_git_diff
+from .services import get_git_diff, read_pr_template
 
 
 def list_tools() -> list[Tool]:
@@ -54,7 +54,10 @@ def summarize_pr_handler(arguments: dict) -> list[TextContent]:
     repo_path = arguments.get('repo_path')
     diff_type = arguments.get('diff_type', DiffType.BRANCH_COMPARE)
     diff = get_git_diff(diff_type=diff_type, branch=branch, repo_path=repo_path)
-    instruction = SUMMARIZE_PR_INSTRUCTION
+    
+    # Get PR template if configured and build instruction accordingly
+    pr_template = read_pr_template(repo_path)
+    instruction = build_summarize_pr_instruction(pr_template)
     result = GitDiffSummaryResult(diff=diff, instruction=instruction)
     return [TextContent(type='text', text=result.model_dump_json())]
 
