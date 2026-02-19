@@ -12,7 +12,7 @@ def build_summarize_pr_instruction(pr_template: str | None = None) -> str:
         return SUMMARIZE_PR_INSTRUCTION
     
     return (
-        'Format the entire result as a single markdown block.\n\n'
+        'Wrap your ENTIRE response in a single fenced code block: start the response with ```markdown and end it with ```. Do not output anything outside the code block.\n\n'
         'Based on the following code changes (git diff), generate a pull request description '
         'that follows the provided template structure.\n\n'
         '**IMPORTANT:** Use the template below as your guide. Fill in each section of the template '
